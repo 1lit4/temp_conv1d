@@ -30,6 +30,7 @@ class ConvLayer:
 
                  #qtd matrizes            qtd_linhas_filtro   qtdcolunas
         temp = np.zeros((out_channels, tamanho_linhas_dilatacao, in_channels), dtype=weights.dtype) #cria uma matriz de zeros para ajustar o formato dos pesos
+        weights = weights.transpose(2, 1, 0)
         temp[:,::dilation,:] = weights #preenche o vetor de zeros com os pesos pulando o valor da dilatação
         self.dilated_weights = temp #pesos com a dilatação aplicada
         
@@ -95,7 +96,7 @@ class ConvLayer:
             else:
                 dW[linha_wi] = np.dot(input_slice.T, erros)
             
-        return dW
+        return dW.transpose(2, 0, 1)
         
     def calcular_dX(self, erros:np.ndarray):
 
@@ -120,59 +121,53 @@ class ConvLayer:
         dB = np.sum(erros, axis=0) #soma dos erros já que dout/dB = 1
         return dB
 
-    def backward(self, erros:np.ndarray):
-        
-        #vai para o otimizador
-
-        print("DW CALCULADO:")
+    def backward(self, erros:np.ndarray, learning_rate:float = 0.001) -> np.ndarray:
         dW = self.calcular_dW(erros)
-        print(dW)
-        print('\n\n')
-
         dB = self.calcular_dB(erros)
-
-        print("DX CALCULADO:")
         dX = self.calcular_dX(erros)
-        print(dX)
+
+        #otimizador padrão: gradient descent
+        self.weights -= learning_rate * dW
+        self.bias    -= learning_rate * dB
         return dX
 
+if __name__ == "__main__":
+
+            #kernel size ->  #chanels
+    peso = [[[1,2,3],         #^
+            [4,5,6],         #|
+            [7,8,9]],        #
+            
+            [[2,3,4],         # depth 2
+            [5,6,7],
+            [8,9,1]],
+            
+            [[3,4,5],         # depth 3
+            [6,7,8],
+            [9,1,2]]]        #
 
 
-        #kernel size ->  #chanels
-peso = [[[1,2,3],         #^
-         [4,5,6],         #|
-         [7,8,9]],        #
-        
-        [[2,3,4],         # depth 2
-         [5,6,7],
-         [8,9,1]],
-        
-        [[3,4,5],         # depth 3
-         [6,7,8],
-         [9,1,2]]]        #
+    chanels = 3
+    chanels_in = 3
 
 
-chanels = 3
-chanels_in = 3
+    kernel = ConvLayer(kernel_size=3, weights=np.array(peso), out_channels=chanels, in_channels=3, dilation=3, stride=1)
+
+    input_data = np.array([[0, 6, 1],
+                        [1, 5, 1],
+                        [2, 4, 1],
+                        [3, 3, 1],
+                        [4, 2, 1],
+                        [5, 1, 1],
+                        [6, 0, 1],
+                        [7, 1, 1]]).astype(float)
+
+    erro = np.array([[1.,1.,1.],
+                    [1.,1.,1.]])
+
+    print(kernel.forward(input_data))
 
 
-kernel = ConvLayer(kernel_size=3, weights=np.array(peso), out_channels=chanels, in_channels=3, dilation=3, stride=1)
+    kernel.backward(erro)
 
-input_data = np.array([[0, 6, 1],
-                       [1, 5, 1],
-                       [2, 4, 1],
-                       [3, 3, 1],
-                       [4, 2, 1],
-                       [5, 1, 1],
-                       [6, 0, 1],
-                       [7, 1, 1]]).astype(float)
-
-erro = np.array([[1.,1.,1.],
-                 [1.,1.,1.]])
-
-print(kernel.forward(input_data))
-
-
-kernel.backward(erro)
-
-# print(np.correlate([0,1,2,3,4,5,6], [1,2,3], 'valid'))
+    # print(np.correlate([0,1,2,3,4,5,6], [1,2,3], 'valid'))
