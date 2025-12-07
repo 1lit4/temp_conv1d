@@ -17,9 +17,13 @@ class FullyConnected:
 
         return self.weights @ input_data + self.bias
 
-    def backward(self, grad_output:np.ndarray) ->np.ndarray:
+    def backward(self, grad_output:np.ndarray, learning_rate:float = 0.001) ->np.ndarray:
         dX = self.weights.T @ grad_output
         dW = grad_output @ self.saved_input.T
         dB = np.sum(grad_output, axis=1)
+
+        #otimizador padrão: gradient descent
+        self.weights -= learning_rate * dW
+        self.bias    -= learning_rate * dB
         return  dX
     
