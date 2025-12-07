@@ -1,10 +1,6 @@
 import numpy as np
-#TODO camada covolucional completa [x]
-#TODO canais [x]
 #TODO funcao de ativação []
-#TODO backpropagation [x]
 #TODO convolução 1x1 []
-#TODO Pooling [x]
 #TODO Fully Connected no final []
 #TODO e quando sai do range do input? Convolucao valida e etc [?]
 #TODO adicionar o bias nas coisas []

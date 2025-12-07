@@ -1,6 +1,5 @@
 import numpy as np
 #TODO conversão
-#TODO adicionar vies
 
 class FullyConnected:
     def __init__(self,  weights:np.ndarray, input_size:np.int64, bias:np.ndarray, output_size:np.int64):

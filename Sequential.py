@@ -1,0 +1,15 @@
+class Sequential:
+    def __init__(self, layers:list):
+        self.layers = layers
+
+    def forward(self, X):
+        for layer in self.layers:
+            X = layer.forward(X)
+        return X
+    def backward(self, grad):
+        for layer in reversed(self.layers):
+            grad = layer.backward(grad)[0] #pegar só o dX
+
+
+
+
