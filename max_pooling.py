@@ -1,7 +1,7 @@
 import numpy as np
 
 class MaxPooling:
-    def __init__(self, size:int): #TODO talvez um stride no futuro
+    def __init__(self, size:int): 
         self.size = size # tamanho da janela do max pooling
         self.saved_input = None
         self.mask = None

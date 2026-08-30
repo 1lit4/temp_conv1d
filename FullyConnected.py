@@ -2,9 +2,16 @@ import numpy as np
 #TODO conversão
 
 class FullyConnected:
-    def __init__(self,  weights:np.ndarray, input_size:np.int64, bias:np.ndarray, output_size:np.int64):
-        assert weights.shape == (output_size, input_size), "Pesos não compativeis com entrada e saida"
-        assert bias.shape == (output_size,), "Bias não compativel com a saida"
+    def __init__(self, input_size:np.int64,output_size:np.int64, weights:np.ndarray = None, bias:np.ndarray = None):
+        if weights is None:
+            weights = np.random.randn(output_size, input_size).astype(np.float32)
+        else:
+            assert weights.shape == (output_size, input_size), "Pesos não compativeis com entrada e saida"
+        
+        if bias is None:
+            bias = np.random.randn(output_size).astype(np.float32)
+        else:
+            assert bias.shape == (output_size,), "Bias não compativel com a saida"
 
         self.weights = weights
         self.input_size = input_size
