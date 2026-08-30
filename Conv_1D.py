@@ -1,10 +1,4 @@
 import numpy as np
-#TODO funcao de ativação []
-#TODO convolução 1x1 []
-#TODO Fully Connected no final []
-#TODO e quando sai do range do input? Convolucao valida e etc [?]
-#TODO adicionar o bias nas coisas []
-#TODO gradiente estocastico
 
 
 class ConvLayer:
@@ -15,10 +9,16 @@ class ConvLayer:
         else:
             assert weights.shape == (out_channels, kernel_size,in_channels), "Os pesos devem estar no formato ( in_chanel, kernel_size, out_chanel)"
 
+        if not np.issubdtype(weights.dtype, np.floating):
+            weights = weights.astype(np.float32)
+
         if bias is None:
             bias = np.random.randn(out_channels).astype(np.float32)
         else:
             assert bias.shape == (out_channels,), "O bias deve estar no formato ( out_chanel, )"
+
+        if not np.issubdtype(bias.dtype, np.floating):
+            bias = bias.astype(np.float32)
 
         self.kernel_size = kernel_size
         self.stride = stride

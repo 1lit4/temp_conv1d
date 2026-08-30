@@ -1,5 +1,4 @@
 import numpy as np
-#TODO conversão
 
 class FullyConnected:
     def __init__(self, input_size:np.int64,output_size:np.int64, weights:np.ndarray = None, bias:np.ndarray = None):
@@ -22,7 +21,7 @@ class FullyConnected:
     def forward(self, input_data:np.ndarray) -> np.ndarray:
         self.saved_input = input_data
 
-        return self.weights @ input_data + self.bias
+        return self.weights @ input_data + self.bias.reshape(-1, 1)
 
     def backward(self, grad_output:np.ndarray, learning_rate:float = 0.001) ->np.ndarray:
         dX = self.weights.T @ grad_output
@@ -32,5 +31,4 @@ class FullyConnected:
         #otimizador padrão: gradient descent
         self.weights -= learning_rate * dW
         self.bias    -= learning_rate * dB
-        return  dX
-    
+        return dX

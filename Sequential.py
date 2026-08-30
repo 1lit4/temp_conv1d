@@ -8,7 +8,8 @@ class Sequential:
         return X
     def backward(self, grad):
         for layer in reversed(self.layers):
-            grad = layer.backward(grad)[0] #pegar só o dX
+            grad = layer.backward(grad)
+        return grad
 
 
 
